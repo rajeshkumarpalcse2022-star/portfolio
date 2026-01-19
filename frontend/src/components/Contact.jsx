@@ -86,22 +86,22 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-black">
+    <section id="contact" className="py-12 md:py-20 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">Get In Touch</h2>
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Get In Touch</h2>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
             Have a question or want to work together? Feel free to reach out!
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
           {/* Contact Info */}
           <div className="space-y-6">
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
-                <CardTitle className="text-white">Contact Information</CardTitle>
+                <CardTitle className="text-white text-lg md:text-xl">Contact Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -109,8 +109,8 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-white font-medium mb-1">Email</h3>
-                    <p className="text-gray-400">rajesh.pal@example.com</p>
+                    <h3 className="text-white font-medium mb-1 text-sm md:text-base">Email</h3>
+                    <p className="text-gray-400 text-sm md:text-base">rajesh.pal@example.com</p>
                   </div>
                 </div>
 
@@ -119,15 +119,15 @@ const Contact = () => {
                     <MapPin className="w-5 h-5 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-white font-medium mb-1">Location</h3>
-                    <p className="text-gray-400">India</p>
+                    <h3 className="text-white font-medium mb-1 text-sm md:text-base">Location</h3>
+                    <p className="text-gray-400 text-sm md:text-base">India</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <div className="p-6 bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-gray-800 rounded-lg">
-              <h3 className="text-white font-semibold mb-3">Let's Connect</h3>
+              <h3 className="text-white font-semibold mb-3 text-base md:text-lg">Let's Connect</h3>
               <p className="text-gray-400 text-sm">
                 I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. 
                 Whether you need help with development or just want to say hi, I'll do my best to get back to you!
@@ -138,7 +138,7 @@ const Contact = () => {
           {/* Contact Form */}
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-white">Send a Message</CardTitle>
+              <CardTitle className="text-white text-lg md:text-xl">Send a Message</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -149,10 +149,10 @@ const Contact = () => {
                     placeholder="Your Name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-600"
+                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-600 text-sm md:text-base"
                   />
                   {errors.name && (
-                    <p className="text-red-400 text-sm mt-1">{errors.name}</p>
+                    <p className="text-red-400 text-xs md:text-sm mt-1">{errors.name}</p>
                   )}
                 </div>
 
@@ -163,10 +163,10 @@ const Contact = () => {
                     placeholder="Your Email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-600"
+                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-600 text-sm md:text-base"
                   />
                   {errors.email && (
-                    <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+                    <p className="text-red-400 text-xs md:text-sm mt-1">{errors.email}</p>
                   )}
                 </div>
 
@@ -177,16 +177,16 @@ const Contact = () => {
                     rows={5}
                     value={formData.message}
                     onChange={handleChange}
-                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-600 resize-none"
+                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-600 resize-none text-sm md:text-base"
                   />
                   {errors.message && (
-                    <p className="text-red-400 text-sm mt-1">{errors.message}</p>
+                    <p className="text-red-400 text-xs md:text-sm mt-1">{errors.message}</p>
                   )}
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm md:text-base"
                 >
                   <Send className="mr-2 h-4 w-4" />
                   Send Message
