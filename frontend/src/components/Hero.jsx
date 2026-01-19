@@ -4,16 +4,18 @@ import { Button } from './ui/button';
 
 const Hero = () => {
   const [displayedName, setDisplayedName] = useState('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const fullName = 'Rajesh Kumar Pal';
 
   useEffect(() => {
     let index = 0;
     const typingInterval = setInterval(() => {
-      if (index <= fullName.length) {
-        setDisplayedName(fullName.substring(0, index));
+      if (index < fullName.length) {
+        setDisplayedName(fullName.substring(0, index + 1));
         index++;
       } else {
         clearInterval(typingInterval);
+        setIsTypingComplete(true);
       }
     }, 100);
 
