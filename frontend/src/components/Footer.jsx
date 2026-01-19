@@ -31,11 +31,11 @@ const Footer = () => {
 
   return (
     <footer className="bg-black border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-xl font-bold text-white mb-3">Rajesh Kumar Pal</h3>
+            <h3 className="text-lg md:text-xl font-bold text-white mb-3">Rajesh Kumar Pal</h3>
             <p className="text-gray-400 text-sm">
               Full-Stack Web Developer passionate about building modern web applications.
             </p>
@@ -43,7 +43,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-3">Quick Links</h4>
+            <h4 className="text-white font-semibold mb-3 text-sm md:text-base">Quick Links</h4>
             <ul className="space-y-2">
               {['Home', 'About', 'Skills', 'Projects', 'Contact'].map((item) => (
                 <li key={item}>
@@ -60,7 +60,7 @@ const Footer = () => {
 
           {/* Social Links */}
           <div>
-            <h4 className="text-white font-semibold mb-3">Connect With Me</h4>
+            <h4 className="text-white font-semibold mb-3 text-sm md:text-base">Connect With Me</h4>
             <div className="flex gap-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -76,17 +76,16 @@ const Footer = () => {
                     <Icon size={20} />
                   </a>
                 );
-              })}
-            </div>
+              })}</div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8">
+        <div className="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-xs md:text-sm">
               © {currentYear} Rajesh Kumar Pal. All rights reserved.
             </p>
-            <p className="text-gray-400 text-sm flex items-center gap-1">
+            <p className="text-gray-400 text-xs md:text-sm flex items-center gap-1">
               Made with <Heart size={16} className="text-red-500" /> and React
             </p>
           </div>
