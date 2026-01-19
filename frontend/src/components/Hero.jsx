@@ -38,7 +38,7 @@ const Hero = () => {
                 <p className="text-blue-400 text-sm font-medium mb-2">Hello, I'm</p>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 min-h-[4rem] sm:min-h-[5rem] md:min-h-[6rem]">
                   {displayedName}
-                  <span className="animate-pulse">|</span>
+                  {!isTypingComplete && <span className="animate-pulse">|</span>}
                 </h1>
                 <h2 className="text-xl sm:text-2xl md:text-3xl text-gray-300 font-medium">
                   Full-Stack Web Developer
