@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const About = () => {
-  const codeSnippet = `// Full-Stack Developer
+  const [displayedCode, setDisplayedCode] = useState('');
+  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const currentIndexRef = useRef(0);
+  const codeContainerRef = useRef(null);
+
+  const fullCode = `// Full-Stack Developer
 const developer = {
   name: "Rajesh Kumar Pal",
   role: "Full-Stack Developer",
@@ -26,6 +32,87 @@ const developer = {
 };
 
 export default developer;`;
+
+  useEffect(() => {
+    let typingInterval;
+
+    if (!isPaused && currentIndexRef.current < fullCode.length) {
+      typingInterval = setInterval(() => {
+        if (currentIndexRef.current < fullCode.length) {
+          setDisplayedCode(fullCode.substring(0, currentIndexRef.current + 1));
+          currentIndexRef.current++;
+          
+          // Auto-scroll to bottom as code types
+          if (codeContainerRef.current && !isHovered) {
+            codeContainerRef.current.scrollTop = codeContainerRef.current.scrollHeight;
+          }
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 30); // Typing speed - 30ms per character
+    }
+
+    return () => {
+      if (typingInterval) clearInterval(typingInterval);
+    };
+  }, [isPaused, fullCode, isHovered]);
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+    setIsHovered(false);
+  };
+
+  const handleScroll = () => {
+    if (!isPaused) {
+      setIsPaused(true);
+    }
+  };
+
+  const renderSyntaxHighlightedCode = (code) => {
+    // Simple syntax highlighting
+    return code.split('\n').map((line, lineIndex) => {
+      let highlightedLine = line;
+
+      // Comments
+      if (line.trim().startsWith('//')) {
+        return (
+          <div key={lineIndex}>
+            <span className="text-gray-500">{line}</span>
+          </div>
+        );
+      }
+
+      // Keywords
+      const keywords = ['const', 'return', 'export', 'default'];
+      keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+        highlightedLine = highlightedLine.replace(regex, `<span class="text-purple-400">${keyword}</span>`);
+      });
+
+      // Strings
+      highlightedLine = highlightedLine.replace(/"([^"]*)"/g, '<span class="text-yellow-300">"$1"</span>');
+
+      // Properties
+      highlightedLine = highlightedLine.replace(/(\w+):/g, '<span class="text-green-400">$1</span>:');
+
+      // Functions and variables
+      highlightedLine = highlightedLine.replace(/(\w+)\s*=/g, '<span class="text-blue-400">$1</span> =');
+      highlightedLine = highlightedLine.replace(/(\w+)\s*\(/g, '<span class="text-blue-400">$1</span>(');
+
+      // Booleans
+      highlightedLine = highlightedLine.replace(/\btrue\b/g, '<span class="text-orange-400">true</span>');
+      highlightedLine = highlightedLine.replace(/\bfalse\b/g, '<span class="text-orange-400">false</span>');
+
+      return (
+        <div key={lineIndex} dangerouslySetInnerHTML={{ __html: highlightedLine || '&nbsp;' }} />
+      );
+    });
+  };
 
   return (
     <section id="about" className="py-12 md:py-20 bg-gray-900">
@@ -55,9 +142,13 @@ export default developer;`;
             </p>
           </div>
 
-          {/* Right - Code Mockup */}
+          {/* Right - Code Mockup with Auto-Typing */}
           <div className="order-1 md:order-2">
-            <div className="relative bg-gray-950 border border-gray-800 rounded-lg shadow-2xl shadow-blue-600/10 overflow-hidden">
+            <div 
+              className="relative bg-gray-950 border border-gray-800 rounded-lg shadow-2xl shadow-blue-600/10 overflow-hidden"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
               {/* Editor Header */}
               <div className="bg-gray-900 border-b border-gray-800 px-4 py-2 flex items-center gap-2">
                 <div className="flex gap-1.5">
@@ -68,36 +159,21 @@ export default developer;`;
                 <span className="text-gray-400 text-xs ml-3 font-mono">developer.js</span>
               </div>
               
-              {/* Code Content */}
-              <div className="p-4 md:p-6 overflow-x-auto">
-                <pre className="text-xs md:text-sm font-mono">
-                  <code>
-                    <span className="text-gray-500">// Full-Stack Developer</span>{'\n'}
-                    <span className="text-purple-400">const</span> <span className="text-blue-400">developer</span> <span className="text-white">=</span> {'{\n'}
-                    {'  '}<span className="text-green-400">name</span><span className="text-white">:</span> <span className="text-yellow-300">"Rajesh Kumar Pal"</span><span className="text-white">,</span>{'\n'}
-                    {'  '}<span className="text-green-400">role</span><span className="text-white">:</span> <span className="text-yellow-300">"Full-Stack Developer"</span><span className="text-white">,</span>{'\n'}
-                    {'  '}<span className="text-green-400">skills</span><span className="text-white">:</span> {'[\n'}
-                    {'    '}<span className="text-yellow-300">"React"</span><span className="text-white">,</span> <span className="text-yellow-300">"JavaScript"</span><span className="text-white">,</span>{'\n'}
-                    {'    '}<span className="text-yellow-300">"Node.js"</span><span className="text-white">,</span> <span className="text-yellow-300">"MongoDB"</span><span className="text-white">,</span>{'\n'}
-                    {'    '}<span className="text-yellow-300">"HTML/CSS"</span><span className="text-white">,</span> <span className="text-yellow-300">"C++"</span>{'\n'}
-                    {'  '}<span className="text-white">],</span>{'\n'}
-                    {'\n'}
-                    {'  '}<span className="text-blue-400">workExperience</span><span className="text-white">:</span> <span className="text-purple-400">() =&gt;</span> {'{\n'}
-                    {'    '}<span className="text-purple-400">return</span> {'{\n'}
-                    {'      '}<span className="text-green-400">frontend</span><span className="text-white">:</span> <span className="text-yellow-300">"React.js"</span><span className="text-white">,</span>{'\n'}
-                    {'      '}<span className="text-green-400">backend</span><span className="text-white">:</span> <span className="text-yellow-300">"FastAPI, Node.js"</span><span className="text-white">,</span>{'\n'}
-                    {'      '}<span className="text-green-400">database</span><span className="text-white">:</span> <span className="text-yellow-300">"MongoDB"</span><span className="text-white">,</span>{'\n'}
-                    {'      '}<span className="text-green-400">tools</span><span className="text-white">:</span> <span className="text-yellow-300">"n8n, LLM APIs"</span>{'\n'}
-                    {'    '}{'}'}<span className="text-white">;</span>{'\n'}
-                    {'  '}{'}'}<span className="text-white">,</span>{'\n'}
-                    {'\n'}
-                    {'  '}<span className="text-green-400">passion</span><span className="text-white">:</span> <span className="text-yellow-300">"Building scalable apps"</span><span className="text-white">,</span>{'\n'}
-                    {'  '}<span className="text-green-400">learning</span><span className="text-white">:</span> <span className="text-yellow-300">"Always exploring"</span><span className="text-white">,</span>{'\n'}
-                    {'  '}<span className="text-green-400">coffee</span><span className="text-white">:</span> <span className="text-orange-400">true</span>{'\n'}
-                    {'}'}<span className="text-white">;</span>{'\n'}
-                    {'\n'}
-                    <span className="text-purple-400">export default</span> <span className="text-blue-400">developer</span><span className="text-white">;</span>
-                  </code>
+              {/* Code Content with Auto-Typing */}
+              <div 
+                ref={codeContainerRef}
+                className={`p-4 md:p-6 overflow-y-auto code-container ${isHovered ? 'show-scrollbar' : ''}`}
+                style={{ 
+                  maxHeight: '400px',
+                  scrollBehavior: 'smooth'
+                }}
+                onScroll={handleScroll}
+              >
+                <pre className="text-xs md:text-sm font-mono text-white">
+                  {renderSyntaxHighlightedCode(displayedCode)}
+                  {currentIndexRef.current < fullCode.length && !isPaused && (
+                    <span className="animate-pulse text-white">|</span>
+                  )}
                 </pre>
               </div>
               
@@ -107,6 +183,40 @@ export default developer;`;
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .code-container {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        .code-container::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
+
+        .code-container.show-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #4b5563 #1f2937;
+        }
+
+        .code-container.show-scrollbar::-webkit-scrollbar {
+          display: block;
+          width: 8px;
+        }
+
+        .code-container.show-scrollbar::-webkit-scrollbar-track {
+          background: #1f2937;
+        }
+
+        .code-container.show-scrollbar::-webkit-scrollbar-thumb {
+          background: #4b5563;
+          border-radius: 4px;
+        }
+
+        .code-container.show-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #6b7280;
+        }
+      `}</style>
     </section>
   );
 };
