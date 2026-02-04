@@ -1,24 +1,27 @@
 import React from 'react';
-import { Github, Linkedin, Twitter, Heart } from 'lucide-react';
+import { Github, Linkedin, Instagram, Heart } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
     {
+      name: 'LinkedIn',
+      icon: Linkedin,
+      url: 'https://www.linkedin.com/in/rajesh-kumar-pal-552713262/',
+      color: 'bg-blue-600',
+    },
+    {
       name: 'GitHub',
       icon: Github,
       url: 'https://github.com',
+      color: 'bg-gray-700',
     },
     {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      url: 'https://linkedin.com',
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      url: 'https://twitter.com',
+      name: 'Instagram',
+      icon: Instagram,
+      url: 'https://www.instagram.com/raj_pal__440?igsh=MTh3eHNzZ3F5enZraQ==',
+      color: 'bg-pink-600',
     },
   ];
 
@@ -70,7 +73,7 @@ const Footer = () => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 hover:text-white hover:border-blue-600 transition-all"
+                    className={`p-3 ${social.color} rounded-lg text-white hover:opacity-90 transition-all transform hover:scale-110`}
                     aria-label={social.name}
                   >
                     <Icon size={20} />

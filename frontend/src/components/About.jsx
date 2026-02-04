@@ -1,61 +1,81 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 const About = () => {
-  const [displayedCode, setDisplayedCode] = useState('');
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [activeLine, setActiveLine] = useState(0);
+  const [typingLine, setTypingLine] = useState(-1);
+  const [typedText, setTypedText] = useState('');
   const [isPaused, setIsPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const currentIndexRef = useRef(0);
   const codeContainerRef = useRef(null);
+  const animationPhase = useRef(0);
+  const charIndex = useRef(0);
 
-  const fullCode = `// Full-Stack Developer
-const developer = {
-  name: "Rajesh Kumar Pal",
-  role: "Full-Stack Developer",
-  skills: [
-    "React", "JavaScript",
-    "Node.js", "MongoDB",
-    "HTML/CSS", "C++"
-  ],
-  
-  workExperience: () => {
-    return {
-      frontend: "React.js",
-      backend: "FastAPI, Node.js",
-      database: "MongoDB",
-      tools: "n8n, LLM APIs"
-    };
-  },
-  
-  passion: "Building scalable web apps",
-  learning: "Always exploring new tech",
-  coffee: true
-};
-
-export default developer;`;
+  const codeLines = useMemo(() => [
+    'members.push_back(name);',
+    '',
+    'cout << "[NEW MEMBER] \\"" << name',
+    '<< " has joined the team.\\"" << endl;',
+    '',
+    'cout << "[INFO] \\"Total members: "',
+    '<< members.size() << "\\"" << endl;',
+    '}',
+    '',
+    'void startCoding() {',
+    '  if (!lisActive) {',
+    '    cout << "[WARNING] \\"Army is',
+    'offline. Cannot start coding.\\"" << endl;',
+    '    return;',
+    '  }',
+    '',
+    '  cout << "[SESSION] \\"Coding'
+  ], []);
 
   useEffect(() => {
-    let typingInterval;
+    if (isPaused) return;
 
-    if (!isPaused && currentIndexRef.current < fullCode.length) {
-      typingInterval = setInterval(() => {
-        if (currentIndexRef.current < fullCode.length) {
-          setDisplayedCode(fullCode.substring(0, currentIndexRef.current + 1));
-          currentIndexRef.current++;
-          
-          // Auto-scroll to bottom as code types
-          if (codeContainerRef.current && !isHovered) {
-            codeContainerRef.current.scrollTop = codeContainerRef.current.scrollHeight;
-          }
+    const interval = setInterval(() => {
+      // Phase 0: Type first line slowly
+      if (animationPhase.current === 0) {
+        const lineToType = 0;
+        setTypingLine(lineToType);
+        setActiveLine(lineToType);
+        
+        if (charIndex.current < codeLines[lineToType].length) {
+          setTypedText(codeLines[lineToType].substring(0, charIndex.current + 1));
+          charIndex.current++;
         } else {
-          clearInterval(typingInterval);
+          // Line complete, pause then move to scroll
+          charIndex.current = 0;
+          animationPhase.current = 1;
+          setTypingLine(-1);
+          setTypedText('');
         }
-      }, 30); // Typing speed - 30ms per character
-    }
+      }
+      // Phase 1: Smooth continuous scroll
+      else if (animationPhase.current === 1) {
+        setScrollPosition((prev) => {
+          const maxScroll = codeLines.length * 22;
+          const newPos = prev + 0.4;
+          
+          // Seamless loop - reset when reaching near end
+          if (newPos >= maxScroll - 300) {
+            animationPhase.current = 0;
+            charIndex.current = 0;
+            return 0;
+          }
+          
+          // Update active line based on scroll position
+          const currentLine = Math.floor((newPos + 220) / 22);
+          setActiveLine(Math.min(currentLine, codeLines.length - 1));
+          
+          return newPos;
+        });
+      }
+    }, animationPhase.current === 0 ? 60 : 25);
 
-    return () => {
-      if (typingInterval) clearInterval(typingInterval);
-    };
-  }, [isPaused, fullCode, isHovered]);
+    return () => clearInterval(interval);
+  }, [isPaused, codeLines]);
 
   const handleMouseEnter = () => {
     setIsPaused(true);
@@ -65,53 +85,6 @@ export default developer;`;
   const handleMouseLeave = () => {
     setIsPaused(false);
     setIsHovered(false);
-  };
-
-  const handleScroll = () => {
-    if (!isPaused) {
-      setIsPaused(true);
-    }
-  };
-
-  const renderSyntaxHighlightedCode = (code) => {
-    // Simple syntax highlighting
-    return code.split('\n').map((line, lineIndex) => {
-      let highlightedLine = line;
-
-      // Comments
-      if (line.trim().startsWith('//')) {
-        return (
-          <div key={lineIndex}>
-            <span className="text-gray-500">{line}</span>
-          </div>
-        );
-      }
-
-      // Keywords
-      const keywords = ['const', 'return', 'export', 'default'];
-      keywords.forEach(keyword => {
-        const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-        highlightedLine = highlightedLine.replace(regex, `<span class="text-purple-400">${keyword}</span>`);
-      });
-
-      // Strings
-      highlightedLine = highlightedLine.replace(/"([^"]*)"/g, '<span class="text-yellow-300">"$1"</span>');
-
-      // Properties
-      highlightedLine = highlightedLine.replace(/(\w+):/g, '<span class="text-green-400">$1</span>:');
-
-      // Functions and variables
-      highlightedLine = highlightedLine.replace(/(\w+)\s*=/g, '<span class="text-blue-400">$1</span> =');
-      highlightedLine = highlightedLine.replace(/(\w+)\s*\(/g, '<span class="text-blue-400">$1</span>(');
-
-      // Booleans
-      highlightedLine = highlightedLine.replace(/\btrue\b/g, '<span class="text-orange-400">true</span>');
-      highlightedLine = highlightedLine.replace(/\bfalse\b/g, '<span class="text-orange-400">false</span>');
-
-      return (
-        <div key={lineIndex} dangerouslySetInnerHTML={{ __html: highlightedLine || '&nbsp;' }} />
-      );
-    });
   };
 
   return (
@@ -142,81 +115,111 @@ export default developer;`;
             </p>
           </div>
 
-          {/* Right - Code Mockup with Auto-Typing */}
+          {/* Right - Premium Code Editor Mockup */}
           <div className="order-1 md:order-2">
             <div 
-              className="relative bg-gray-950 border border-gray-800 rounded-lg shadow-2xl shadow-blue-600/10 overflow-hidden"
+              className="relative rounded-2xl overflow-hidden shadow-2xl"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              style={{ 
+                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                border: '2px solid',
+                borderImage: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #06b6d4 100%) 1',
+                boxShadow: '0 0 40px rgba(124, 58, 237, 0.4), inset 0 0 20px rgba(59, 130, 246, 0.1)'
+              }}
             >
-              {/* Editor Header */}
-              <div className="bg-gray-900 border-b border-gray-800 px-4 py-2 flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              {/* Header with Tabs */}
+              <div className="bg-black/40 backdrop-blur-sm px-4 py-3 border-b border-purple-900/40">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-lg"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500 shadow-lg"></div>
+                  </div>
+                  <span className="text-[13px] text-white font-mono font-bold">Rajesh.cpp</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                    <span className="text-[11px] text-green-400 font-mono font-bold">Live Coding</span>
+                  </div>
                 </div>
-                <span className="text-gray-400 text-xs ml-3 font-mono">developer.js</span>
+                
+                {/* Tabs */}
+                <div className="flex gap-6">
+                  <button className="text-[12px] text-gray-400 hover:text-white transition-colors font-mono">
+                    Article
+                  </button>
+                  <button className="text-[12px] text-gray-400 hover:text-white transition-colors font-mono">
+                    Hackathon
+                  </button>
+                </div>
               </div>
               
-              {/* Code Content with Auto-Typing */}
+              {/* Code Editor Content */}
               <div 
                 ref={codeContainerRef}
-                className={`p-4 md:p-6 overflow-y-auto code-container ${isHovered ? 'show-scrollbar' : ''}`}
-                style={{ 
-                  maxHeight: '400px',
-                  scrollBehavior: 'smooth'
-                }}
-                onScroll={handleScroll}
+                className="relative overflow-hidden bg-black/50"
+                style={{ height: '420px' }}
               >
-                <pre className="text-xs md:text-sm font-mono text-white">
-                  {renderSyntaxHighlightedCode(displayedCode)}
-                  {currentIndexRef.current < fullCode.length && !isPaused && (
-                    <span className="animate-pulse text-white">|</span>
-                  )}
-                </pre>
+                <div 
+                  className="transition-transform ease-linear"
+                  style={{ 
+                    transform: `translateY(-${scrollPosition}px)`,
+                    transitionDuration: '25ms'
+                  }}
+                >
+                  <pre 
+                    className="text-[13px] font-mono leading-relaxed p-0 m-0 py-2" 
+                    style={{ 
+                      fontFamily: "'Fira Code', 'Courier New', monospace",
+                      fontWeight: 500,
+                      letterSpacing: '0.5px',
+                      WebkitFontSmoothing: 'antialiased'
+                    }}
+                  >
+                    {codeLines.map((line, index) => (
+                      <div 
+                        key={index}
+                        className={`flex transition-all duration-300 ${index === activeLine ? 'bg-purple-900/30 border-l-2 border-purple-500' : ''}`}
+                        style={{ lineHeight: '24px' }}
+                      >
+                        {/* Line Number */}
+                        <span className="text-gray-600 text-right w-12 px-3 select-none flex-shrink-0">
+                          {index + 26}
+                        </span>
+                        
+                        {/* Code Content */}
+                        <span 
+                          className="text-cyan-300 flex-1 pr-4"
+                          dangerouslySetInnerHTML={{ 
+                            __html: (index === typingLine ? typedText : line) || '&nbsp;'
+                          }} 
+                        />
+                        
+                        {/* Cursor */}
+                        {index === typingLine && (
+                          <span className="text-yellow-400 font-bold animate-pulse">█</span>
+                        )}
+                      </div>
+                    ))}
+                  </pre>
+                </div>
+                
+                {/* Gradient fade effects */}
+                <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-black/50 to-transparent pointer-events-none"></div>
+                <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
               </div>
               
-              {/* Subtle glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/5 to-purple-600/5 pointer-events-none"></div>
+              {/* Minimal Status Bar */}
+              <div className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 px-4 py-1.5 flex items-center justify-between text-[11px] text-cyan-400 font-mono border-t border-purple-800/30">
+                <span className="flex items-center gap-2">
+                  <span className="text-purple-400">●</span> JavaScript
+                </span>
+                <span className="text-purple-300">Line {activeLine + 1}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .code-container {
-          scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none; /* IE and Edge */
-        }
-
-        .code-container::-webkit-scrollbar {
-          display: none; /* Chrome, Safari, Opera */
-        }
-
-        .code-container.show-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: #4b5563 #1f2937;
-        }
-
-        .code-container.show-scrollbar::-webkit-scrollbar {
-          display: block;
-          width: 8px;
-        }
-
-        .code-container.show-scrollbar::-webkit-scrollbar-track {
-          background: #1f2937;
-        }
-
-        .code-container.show-scrollbar::-webkit-scrollbar-thumb {
-          background: #4b5563;
-          border-radius: 4px;
-        }
-
-        .code-container.show-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #6b7280;
-        }
-      `}</style>
     </section>
   );
 };

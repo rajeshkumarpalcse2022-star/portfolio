@@ -1,3 +1,4 @@
+// Projects Component - Portfolio Showcase
 import React from 'react';
 import { ExternalLink, Github } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -5,6 +6,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 
 const Projects = () => {
+  // Project data with details, tech stack, and links
   const projects = [
     {
       title: 'Smart Whiteboard',
@@ -17,9 +19,9 @@ const Projects = () => {
         'DOM manipulation and event handling',
       ],
       techStack: ['HTML', 'CSS', 'JavaScript'],
-      demoLink: 'https://example.com/smart-whiteboard',
+      demoLink: 'https://smartboard1.netlify.app/',
       codeLink: 'https://github.com/username/smart-whiteboard',
-      image: 'https://images.unsplash.com/photo-1616628188859-7a11abb6fcc9?w=800&h=400&fit=crop',
+      image: '/whiteboard.jpg',
     },
     {
       title: 'Portfolio Website',
@@ -37,8 +39,8 @@ const Projects = () => {
       image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop',
     },
     {
-      title: 'AI Chatbot',
-      description: 'An AI-powered chatbot that simulates human-like conversations using Large Language Model concepts.',
+      title: 'AI assistant',
+      description: 'An AI-powered assistant that simulates human-like conversations using Large Language Model concepts.',
       features: [
         'Chat-based UI',
         'API-driven responses',
@@ -47,7 +49,7 @@ const Projects = () => {
         'Clean message interface',
       ],
       techStack: ['HTML', 'CSS', 'JavaScript', 'LLM API'],
-      demoLink: 'https://example.com/ai-chatbot',
+      demoLink: 'https://guileless-tapioca-e176ef.netlify.app/',
       codeLink: 'https://github.com/username/ai-chatbot',
       image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&h=400&fit=crop',
     },

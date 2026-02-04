@@ -71,10 +71,11 @@ const Contact = () => {
     });
     localStorage.setItem('contactSubmissions', JSON.stringify(contactSubmissions));
 
-    // Show success message
+    // Show success message with light green attractive design
     toast({
-      title: 'Message sent successfully!',
+      title: '✓ Message sent successfully!',
       description: 'Thank you for reaching out. I\'ll get back to you soon.',
+      className: 'bg-gradient-to-r from-green-500 to-emerald-500 border-2 border-green-300 text-white shadow-lg shadow-green-500/50',
     });
 
     // Reset form
@@ -110,7 +111,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1 text-sm md:text-base">Email</h3>
-                    <p className="text-gray-400 text-sm md:text-base">rajesh.pal@example.com</p>
+                    <p className="text-gray-400 text-sm md:text-base">pal054851@gmail.com</p>
                   </div>
                 </div>
 

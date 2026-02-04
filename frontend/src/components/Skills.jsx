@@ -1,6 +1,8 @@
+// Skills Component - Infinite Scrolling Tech Stack
 import React from 'react';
 
 const Skills = () => {
+  // List of skills with CDN icons
   const skills = [
     {
       name: 'HTML',

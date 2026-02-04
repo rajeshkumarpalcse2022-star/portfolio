@@ -6,3 +6,11 @@
   min-height: 100vh;
   background-color: #000000;
 }
+
+body, html {
+  background-color: #000000 !important;
+}
+
+#root {
+  background-color: #000000;
+}

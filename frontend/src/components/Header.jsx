@@ -1,10 +1,13 @@
+// Header Component - Fixed Navigation Bar
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Header = () => {
+  // State for mobile menu toggle
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Smooth scroll to section and close mobile menu
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -13,6 +16,7 @@ const Header = () => {
     }
   };
 
+  // Navigation menu items
   const menuItems = [
     { label: 'Home', id: 'home' },
     { label: 'About', id: 'about' },

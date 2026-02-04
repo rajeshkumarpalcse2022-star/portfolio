@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Github, Linkedin, Twitter } from 'lucide-react';
+import { Download, Github, Linkedin, Instagram } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Hero = () => {
@@ -9,22 +9,45 @@ const Hero = () => {
 
   useEffect(() => {
     let index = 0;
+    let isDeleting = false;
+    
     const typingInterval = setInterval(() => {
-      if (index < fullName.length) {
+      if (!isDeleting && index < fullName.length) {
+        // Typing forward
         setDisplayedName(fullName.substring(0, index + 1));
         index++;
-      } else {
-        clearInterval(typingInterval);
+        setIsTypingComplete(false);
+      } else if (!isDeleting && index === fullName.length) {
+        // Pause at the end before deleting
         setIsTypingComplete(true);
+        setTimeout(() => {
+          isDeleting = true;
+        }, 2000); // Wait 2 seconds before starting to delete
+      } else if (isDeleting && index > 0) {
+        // Deleting backward
+        index--;
+        setDisplayedName(fullName.substring(0, index));
+        setIsTypingComplete(false);
+      } else if (isDeleting && index === 0) {
+        // Reset to start typing again
+        isDeleting = false;
+        setTimeout(() => {
+          // Small pause before restarting
+        }, 500);
       }
-    }, 100);
+    }, isDeleting ? 50 : 100); // Delete faster than type
 
     return () => clearInterval(typingInterval);
   }, []);
 
   const handleResumeDownload = () => {
-    // Placeholder for future resume download functionality
-    alert('Resume download will be available soon. Please upload your resume PDF.');
+    // Create a temporary anchor element and trigger download
+    const link = document.createElement('a');
+    link.href = '/resume.pdf';
+    link.download = 'Rajesh_Kumar_Pal_Resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -62,28 +85,28 @@ const Hero = () => {
 
                 <div className="flex gap-3">
                   <a
-                    href="https://github.com"
+                    href="https://www.linkedin.com/in/rajesh-kumar-pal-552713262/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 rounded-lg"
-                  >
-                    <Github size={20} />
-                  </a>
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 rounded-lg"
+                    className="p-3 bg-blue-600 text-white hover:opacity-90 transition-all transform hover:scale-110 rounded-lg"
                   >
                     <Linkedin size={20} />
                   </a>
                   <a
-                    href="https://twitter.com"
+                    href="https://github.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-white transition-colors border border-gray-700 hover:border-gray-500 rounded-lg"
+                    className="p-3 bg-gray-700 text-white hover:opacity-90 transition-all transform hover:scale-110 rounded-lg"
                   >
-                    <Twitter size={20} />
+                    <Github size={20} />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/raj_pal__440?igsh=MTh3eHNzZ3F5enZraQ=="
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 bg-pink-600 text-white hover:opacity-90 transition-all transform hover:scale-110 rounded-lg"
+                  >
+                    <Instagram size={20} />
                   </a>
                 </div>
               </div>
@@ -94,14 +117,14 @@ const Hero = () => {
           <div className="order-1 md:order-2 flex justify-center">
             <div className="relative">
               {/* Rotating outer ring */}
-              <div className="absolute inset-0 w-72 h-72 md:w-96 md:h-96 rounded-full animate-spin-slow">
+              <div className="absolute inset-0 w-56 h-56 md:w-72 md:h-72 rounded-full animate-spin-slow">
                 <div className="w-full h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 opacity-70 blur-sm"></div>
               </div>
               
               {/* Inner image container */}
-              <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-gray-900 shadow-2xl shadow-blue-600/30">
+              <div className="relative w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-4 border-gray-900 shadow-2xl shadow-blue-600/30">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"
+                  src="/rajesh.jpg"
                   alt="Rajesh Kumar Pal"
                   className="w-full h-full object-cover"
                 />
