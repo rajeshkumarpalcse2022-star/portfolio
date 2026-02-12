@@ -20,7 +20,7 @@ const Projects = () => {
       ],
       techStack: ['HTML', 'CSS', 'JavaScript'],
       demoLink: 'https://smartboard2.netlify.app/',
-      codeLink: 'https://github.com/username/smart-whiteboard',
+      codeLink: 'https://github.com/rajeshkumarpalcse2022-star/SMART-BOARD.git',
       image: '/whiteboard.jpg',
     },
     {
@@ -50,7 +50,7 @@ const Projects = () => {
       ],
       techStack: ['HTML', 'CSS', 'JavaScript', 'LLM API'],
       demoLink: 'https://dazzling-tartufo-fd3dbf.netlify.app/',
-      codeLink: 'https://github.com/username/ai-chatbot',
+      codeLink: 'https://github.com/rajeshkumarpalcse2022-star/AI-AGENT.git',
       image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&h=400&fit=crop',
     },
   ];
